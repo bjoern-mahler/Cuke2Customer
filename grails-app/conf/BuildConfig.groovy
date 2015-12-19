@@ -34,13 +34,11 @@ grails.project.dependency.resolution = {
     // whether to do a secondary resolve on plugin installation, not advised and here for backwards compatibility
 
     repositories {
-        inherits true // Whether to inherit repository definitions from plugins
-
         grailsPlugins()
         grailsHome()
         mavenLocal()
-        grailsCentral()
         mavenCentral()
+        grailsCentral()
         // uncomment these (or add new ones) to enable remote dependency resolution from public Maven repositories
         //mavenRepo "http://repository.codehaus.org"
         //mavenRepo "http://download.java.net/maven/2/"
@@ -59,7 +57,9 @@ grails.project.dependency.resolution = {
         }
 
         compile 'info.cukes:gherkin:2.12.2'
+
         compile 'org.tmatesoft.svnkit:svnkit:1.8.5'
+        compile 'org.eclipse.jgit:org.eclipse.jgit:4.1.1.201511131810-r'
     }
 
     plugins {
@@ -68,7 +68,7 @@ grails.project.dependency.resolution = {
 
         // plugins for the compile step
         compile ":scaffolding:2.1.2"
-        compile ':cache:1.1.7'
+        compile ':cache:1.1.8'
         compile ":asset-pipeline:1.9.6"
     }
 }

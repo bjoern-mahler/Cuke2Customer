@@ -13,18 +13,18 @@ class FeatureController {
     FeatureService featureService
     JiraService jiraService
 
-    def index () {
-        redirect (action: 'listFeatures')
+    def index() {
+        redirect(action: 'listFeatures')
     }
 
-    def listFeatures () {
+    def listFeatures() {
     }
 
-    def show () {
-        redirect (action: 'showFeature', params: params)
+    def show() {
+        redirect(action: 'showFeature', params: params)
     }
 
-    def showFeature (String featureHashCode) {
+    def showFeature(String featureHashCode) {
         String gherkin = featureService.getFeatureWithHashCode(featureHashCode)
         Feature feature = new GherkinParser(useJira()).parse(gherkin)
         List<Comment> jiraComments = fetchJiraComments(feature)
@@ -38,22 +38,28 @@ class FeatureController {
         return []
     }
 
-    private boolean useJira () {
+    private boolean useJira() {
         return grailsApplication.config.project.jira.integration.toUpperCase() == 'ON'
     }
 
 
-    def retrieveFeatures () {
+    def retrieveFeatures() {
         final String dir = grailsApplication.config.project.feature.directory
-        if (useSvn()) {
-            FileUtils.forceDelete(new File(dir))
-            versionControlAdapter.checkoutLatestRevision (dir)
+        if (useVcs()) {
+            File repositoryDirectory = new File(dir)
+            if (repositoryDirectory.exists()) {
+                FileUtils.forceDelete(repositoryDirectory)
+            }
+            versionControlAdapter.checkoutLatestRevision(repositoryDirectory)
         }
         featureService.loadFeatures(dir)
         redirect(action: 'listFeatures')
     }
 
-    private boolean useSvn () {
-        return grailsApplication.config.project.svn.integration.toUpperCase() == 'ON'
+    /**
+     * @return true , if the user wants to use a version control system like svn or git
+     */
+    private boolean useVcs() {
+        return grailsApplication.config.project.vcs.integration.toUpperCase() == 'ON'
     }
 }
